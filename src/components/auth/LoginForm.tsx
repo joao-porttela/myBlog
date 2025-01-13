@@ -36,12 +36,6 @@ export default function LoginForm() {
     },
   });
 
-  /**
-   *
-   * Fix onSubmit to handle my requests
-   *
-   */
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const {email, password} = values;
 
@@ -68,7 +62,11 @@ export default function LoginForm() {
       // Redirect user to home page
       router.push("/");
     } catch (error: any) {
-      toast({title: "Login Failed", description: error.message, variant: "destructive"});
+      toast({
+        title: "Login Failed",
+        description: error.message ? error.message : "Something went wrong",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

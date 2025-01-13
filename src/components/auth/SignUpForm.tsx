@@ -98,7 +98,7 @@ export default function SignUpForm() {
     } catch (error: any) {
       toast({
         title: "Registration Failed",
-        description: error.message,
+        description: error.message ? error.message : "Something went wrong",
         variant: "destructive",
       });
     } finally {

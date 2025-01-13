@@ -6,10 +6,11 @@ import {useRouter} from "next/navigation";
 type Props = {children: React.ReactNode};
 
 export default function Layout({children}: Props) {
-  const token = localStorage.getItem("__refresh_token__");
   const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("__refresh_token__")!;
+
     const verifyToken = async () => {
       if (!token) {
         router.push("/auth/login");
@@ -39,7 +40,7 @@ export default function Layout({children}: Props) {
     };
 
     verifyToken();
-  }, [token, router]);
+  }, [router]);
 
   return <div>{children}</div>;
 }
