@@ -45,3 +45,31 @@ export async function login(values: {email: string; password: string}) {
     password: values.password,
   });
 }
+
+export async function verifyToken(token: string): Promise<boolean> {
+  if (!token) {
+    return false;
+  }
+
+  try {
+    const response = await fetch("/api/auth/verify-token", {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Token validation failed");
+    }
+
+    const data = await response.json();
+    if (!data.valid) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

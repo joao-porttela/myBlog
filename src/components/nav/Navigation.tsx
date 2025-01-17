@@ -36,8 +36,15 @@ export default function Navigation() {
       href: "/posts",
       label: "Posts",
       icon: <NotepadTextDashed />,
-      active: pathname.includes("/posts"),
+      active: pathname.includes("/my-posts"),
     },
+    {
+      href: "/my-posts",
+      label: "My Posts",
+      icon: <NotepadTextDashed />,
+      active: pathname.includes("/my-posts"),
+    },
+
     {
       href: user ? "/account" : `/auth/login`,
       label: user ? "Account" : "Login",

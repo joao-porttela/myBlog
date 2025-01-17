@@ -18,7 +18,7 @@ export default function Home() {
       </div>
 
       <Button className="z-10 text-xl" size="lg">
-        <Link className="text-center" href="/posts">
+        <Link className="text-center" href="/my-posts">
           Start blogging now
         </Link>
       </Button>

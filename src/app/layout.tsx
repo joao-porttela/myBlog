@@ -7,6 +7,7 @@ import Navigation from "@/components/nav/Navigation";
 import {ToggleProvider} from "@/providers/toggle-provider";
 import {Toaster} from "@/components/ui/toaster";
 import {AuthProvider} from "@/providers/auth-provider";
+import {ModalProvider} from "@/providers/modal-provider";
 
 export const metadata: Metadata = {
   title: "myBlog",
@@ -31,7 +32,7 @@ export default function RootLayout({
           <AuthProvider>
             <ToggleProvider>
               <Navigation />
-              {children}
+              <ModalProvider>{children}</ModalProvider>
               <Toaster />
             </ToggleProvider>
           </AuthProvider>

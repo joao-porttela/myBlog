@@ -6,6 +6,7 @@ import {useRouter} from "next/navigation";
 
 // Hooks
 import {useAuth} from "@/hooks/use-auth";
+import {toast} from "@/hooks/use-toast";
 
 type Props = {children: React.ReactNode};
 
@@ -37,7 +38,7 @@ export default function Layout({children}: Props) {
               router.push("/"); // Redirect to the home page if the token is valid
             }
           } else {
-            console.error("Token is invalid or expired");
+            toast({title: "Invalid or expired token"});
             router.push("/auth/login"); // Redirect to the login page
           }
         } else {
