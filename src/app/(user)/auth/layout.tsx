@@ -11,12 +11,12 @@ import {toast} from "@/hooks/use-toast";
 type Props = {children: React.ReactNode};
 
 export default function Layout({children}: Props) {
-  const {token} = useAuth(); // Access token from AuthContext
+  const {state} = useAuth(); // Access token from AuthContext
   const router = useRouter();
 
   useEffect(() => {
     const verifyToken = async () => {
-      if (!token) {
+      if (!state.token) {
         return; // No token available, skip validation
       }
 
@@ -25,11 +25,12 @@ export default function Layout({children}: Props) {
         const response = await fetch("/api/auth/verify-token", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${state.token}`, // Include the token in the Authorization header
           },
         });
 
         if (response.ok) {
+          console.log("RESPONSE OK");
           const data = await response.json();
           if (data.valid) {
             // Check token expiration on the server response (optional, if server doesn't handle it)
@@ -51,7 +52,7 @@ export default function Layout({children}: Props) {
     };
 
     verifyToken();
-  }, [token, router]);
+  }, [state.token, router]);
 
   return <div className="py-16 px-4">{children}</div>;
 }

@@ -5,8 +5,7 @@ import {useRouter} from "next/navigation";
 
 // Components
 import MyCategories from "@/components/category/my-categories";
-import PostCard from "@/components/posts/post-card";
-import PostControlPanel from "@/components/posts/post-control-pannel";
+import MyPosts from "@/components/posts/my-posts";
 
 // Hooks
 import {toast} from "@/hooks/use-toast";
@@ -31,9 +30,9 @@ export default function Posts() {
 
       if (!authorId) router.push("/");
 
-      const result = await getUserPosts(authorId);
+      const postsResult = await getUserPosts(authorId);
 
-      setPosts(result.message);
+      setPosts(postsResult.message);
 
       // Fetch categories
       const categoriesResult = await getAuthorCategories(authorId);
@@ -59,21 +58,7 @@ export default function Posts() {
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-full">
-            <h2 className="text-xl md:text-3xl font-thin mb-4">My Posts</h2>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <PostControlPanel />
-          </div>
-        </div>
-
-        {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.id} post={post} getData={getData} />)
-        ) : (
-          <p>You have no posts. Start by creating one.</p>
-        )}
+        <MyPosts posts={posts} getData={getData} />
       </section>
     </div>
   );

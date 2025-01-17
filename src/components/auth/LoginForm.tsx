@@ -25,7 +25,7 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
-  const {loading, setLoading, setToken, setUser} = useAuth(); // Access UserContext
+  const {state, auth} = useAuth(); // Access UserContext
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,8 +40,6 @@ export default function LoginForm() {
     const {email, password} = values;
 
     try {
-      setLoading(true);
-
       // Make login request
       const result = await login({email, password});
 
@@ -49,8 +47,7 @@ export default function LoginForm() {
       const {user, payload: token} = result.message;
 
       // Update AuthContext
-      setUser(user);
-      setToken(token);
+      auth(user, token);
 
       // Store user and token in local storage
       localStorage.setItem("__refresh_token__", token);
@@ -67,8 +64,6 @@ export default function LoginForm() {
         description: error.message ? error.message : "Something went wrong",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -118,8 +113,8 @@ export default function LoginForm() {
               </div>
             </div>
 
-            <Button className="w-full" type="submit">
-              {loading ? <Loading /> : "Login"}
+            <Button className="w-full" type="submit" disabled={state.loading}>
+              {state.loading ? <Loading /> : "Login"}
             </Button>
           </form>
 

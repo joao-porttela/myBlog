@@ -13,7 +13,8 @@ export async function POST(req: Request) {
 
   const header = await headers();
 
-  const token = header.get("authorization")?.split(" ")[1]; // Get the token from the Authorization header
+  const token = header.get("authorization")?.split(" ")[1]; // Get the token from the
+  // Authorization header
   const publicKey = process.env.PUBLIC_KEY!; // Public key for verification
 
   if (!token) {

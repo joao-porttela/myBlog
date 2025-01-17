@@ -1,11 +1,7 @@
-import {Dispatch, SetStateAction} from "react";
 import {IUser} from "../user.interface";
+import {IAuthState} from "./auth-state.interface";
 
 export interface IAuthContext {
-  user: IUser | null;
-  loading: boolean;
-  token: string | null;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-  setUser: Dispatch<SetStateAction<IUser | null>>;
-  setToken: Dispatch<SetStateAction<string | null>>;
+  state: IAuthState;
+  auth: (user: IUser, token: string) => void;
 }

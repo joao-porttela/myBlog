@@ -1,8 +1,11 @@
 "use client";
 
-import React, {useState, ReactNode, useEffect} from "react";
+import React, {ReactNode, useEffect, useReducer} from "react";
 
-import {AuthContext} from "@/context/auth-context";
+import {AuthContext, authInitialState} from "@/context/auth-context";
+
+import {AuthReducer} from "@/reducers/auth-reducer";
+
 import {IUser} from "@/interfaces/user.interface";
 
 interface AuthProviderProps {
@@ -16,47 +19,42 @@ interface AuthProviderProps {
  */
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
-  const [user, setUser] = useState<IUser | null>(null); // User state
-  const [token, setToken] = useState<string | null>(null); // Authentication token
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [state, dispatch] = useReducer(AuthReducer, authInitialState);
+
+  function auth(user: IUser, token: string) {
+    dispatch({type: "loading"});
+    dispatch({
+      type: "auth",
+      payload: {
+        user,
+        token,
+      },
+    });
+    dispatch({type: "loading"});
+  }
 
   function setValues() {
     const t = localStorage.getItem("__refresh_token__");
 
-    if (t) {
-      setToken(t);
-    } else {
-      setToken(null);
-    }
+    const u = JSON.parse(localStorage.getItem("user"));
 
-    const u = localStorage.getItem("user");
-
-    if (u) {
-      setUser(JSON.parse(u));
+    if (t && u) {
+      auth(u, t);
     } else {
-      setUser(null);
     }
 
     return u;
   }
 
   useEffect(() => {
-    setLoading(true);
-
     setValues();
-
-    setLoading(false);
-  }, [token]);
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        loading,
-        token,
-        setLoading,
-        setUser,
-        setToken,
+        state,
+        auth,
       }}
     >
       {children}

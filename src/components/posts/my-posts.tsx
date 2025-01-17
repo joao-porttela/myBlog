@@ -7,7 +7,7 @@ import {IPost} from "@/interfaces/post.interface";
 
 type myPostsProps = {
   posts: IPost[];
-  getData: () => void;
+  getData?: () => void;
 };
 
 export default function MyPosts({posts, getData}: myPostsProps) {
@@ -23,7 +23,7 @@ export default function MyPosts({posts, getData}: myPostsProps) {
         </div>
       </div>
 
-      {posts.length > 0 ? (
+      {posts && posts.length > 0 ? (
         posts.map((post) => <PostCard key={post.id} post={post} getData={getData} />)
       ) : (
         <p>No posts available.</p>

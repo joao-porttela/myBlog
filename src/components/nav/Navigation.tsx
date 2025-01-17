@@ -14,7 +14,7 @@ import {useAuth} from "@/hooks/use-auth";
 import {useIsMobile} from "@/hooks/use-mobile";
 
 // Icons
-import {Home, CircleUser, Rss, NotepadTextDashed} from "lucide-react";
+import {Home, CircleUser, Rss, NotepadTextDashed, Newspaper} from "lucide-react";
 
 // Interfaces
 import {IRoute} from "./interfaces/IRoute";
@@ -35,8 +35,8 @@ export default function Navigation() {
     {
       href: "/posts",
       label: "Posts",
-      icon: <NotepadTextDashed />,
-      active: pathname.includes("/my-posts"),
+      icon: <Newspaper />,
+      active: pathname.includes("/posts"),
     },
     {
       href: "/my-posts",

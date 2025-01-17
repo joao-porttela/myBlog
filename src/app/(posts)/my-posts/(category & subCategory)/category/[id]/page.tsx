@@ -5,9 +5,7 @@ import Link from "next/link";
 import {useParams, useRouter} from "next/navigation";
 
 // Components
-import PostCard from "@/components/posts/post-card";
 import SubCategoryCard from "@/components/subCategory/sub-category-card";
-import PostControlPanel from "@/components/posts/post-control-pannel";
 import ReturnButton from "@/components/global/return-button";
 
 // UI
@@ -25,10 +23,9 @@ import {toast} from "@/hooks/use-toast";
 import {getCategory} from "@/lib/category-actions";
 
 // Interfaces
-import {IPost} from "@/interfaces/post.interface";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
-import {ISubCategory} from "@/interfaces/subCategory.interface";
 import {ICategory} from "@/interfaces/category.interface";
+import MyPosts from "@/components/posts/my-posts";
 
 export default function CategoryPage() {
   const router = useRouter();
@@ -36,7 +33,7 @@ export default function CategoryPage() {
 
   const [category, setCategory] = useState<ICategory>({name: ""});
 
-  const fetchData = async () => {
+  const getData = async () => {
     try {
       const categoryId = params.id;
 
@@ -56,7 +53,7 @@ export default function CategoryPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    getData();
   }, []);
 
   return (
@@ -112,23 +109,7 @@ export default function CategoryPage() {
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-full">
-            <h2 className="text-xl md:text-3xl font-thin mb-4">My Posts</h2>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <PostControlPanel categoryId={category.id} />
-          </div>
-        </div>
-
-        {category.posts && category.posts.length > 0 ? (
-          category.posts.map((post) => (
-            <PostCard key={post.id} post={post} getData={fetchData} />
-          ))
-        ) : (
-          <p>No posts available.</p>
-        )}
+        <MyPosts posts={category.posts} getData={getData} />
       </section>
     </div>
   );

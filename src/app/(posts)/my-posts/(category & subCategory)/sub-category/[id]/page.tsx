@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
 
 // Components
-import PostCard from "@/components/posts/post-card";
+import MyPosts from "@/components/posts/my-posts";
 import ReturnButton from "@/components/global/return-button";
 
 // Hooks
@@ -15,18 +15,15 @@ import {getSubCategory} from "@/lib/sub-category-actions";
 
 // Interfaces
 import {ISubCategory} from "@/interfaces/subCategory.interface";
-import {IPost} from "@/interfaces/post.interface";
 import {Separator} from "@/components/ui/separator";
-import PostControlPanel from "@/components/posts/post-control-pannel";
 
 export default function SubCategoryPage() {
   const router = useRouter();
   const params = useParams<{id: string}>();
 
   const [subCategory, setSubCategory] = useState<ISubCategory>({});
-  const [posts, setPosts] = useState<IPost[]>([]);
 
-  const fetchData = async () => {
+  const getData = async () => {
     try {
       const subCategoryId = params.id;
 
@@ -37,7 +34,6 @@ export default function SubCategoryPage() {
 
       // Fetch subcategory data
       const subCategory = await getSubCategory(subCategoryId);
-      setPosts(subCategory.posts);
       setSubCategory(subCategory);
     } catch {
       toast({
@@ -49,7 +45,7 @@ export default function SubCategoryPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    getData();
   }, []);
 
   return (
@@ -66,24 +62,7 @@ export default function SubCategoryPage() {
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-full">
-            <h2 className="text-xl md:text-3xl font-thin mb-4">My Posts</h2>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <PostControlPanel
-              categoryId={subCategory.categoryId}
-              subCategoryId={subCategory.id}
-            />
-          </div>
-        </div>
-
-        {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.id} post={post} getData={fetchData} />)
-        ) : (
-          <p>No posts available.</p>
-        )}
+        <MyPosts posts={subCategory.posts} getData={getData} />
       </section>
     </div>
   );

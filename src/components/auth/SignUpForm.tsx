@@ -59,7 +59,7 @@ const formSchema = z
 
 export default function SignUpForm() {
   const {toast} = useToast();
-  const {loading, setLoading, setToken, setUser} = useAuth(); // Access UserContext
+  const {state, auth} = useAuth(); // Access UserContext
   const router = useRouter(); // Initialize Next.js router
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -74,8 +74,6 @@ export default function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setLoading(true);
-
       // Make sign up request
       const result = await signUp(values);
 
@@ -83,8 +81,7 @@ export default function SignUpForm() {
       const {user, payload: token} = result.message;
 
       // Update AuthContext
-      setUser(user);
-      setToken(token);
+      auth(user, token);
 
       // Store user and token in local storage
       localStorage.setItem("__refresh_token__", token);
@@ -101,8 +98,6 @@ export default function SignUpForm() {
         description: error.message ? error.message : "Something went wrong",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -186,8 +181,8 @@ export default function SignUpForm() {
               </div>
             </div>
 
-            <Button className="w-full" type="submit" disabled={loading}>
-              {loading ? <Loading /> : "Sign up"}
+            <Button className="w-full" type="submit" disabled={state.loading}>
+              {state.loading ? <Loading /> : "Sign up"}
             </Button>
           </form>
 
