@@ -30,7 +30,6 @@ export default function Layout({children}: Props) {
         });
 
         if (response.ok) {
-          console.log("RESPONSE OK");
           const data = await response.json();
           if (data.valid) {
             // Check token expiration on the server response (optional, if server doesn't handle it)

@@ -23,6 +23,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   function auth(user: IUser, token: string) {
     dispatch({type: "loading"});
+
+    // Store user and token in local storage
+    localStorage.setItem("__refresh_token__", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
     dispatch({
       type: "auth",
       payload: {
@@ -30,24 +35,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         token,
       },
     });
-    dispatch({type: "loading"});
   }
 
-  function setValues() {
+  function logout() {
+    localStorage.removeItem("__refresh_token__");
+    localStorage.removeItem("user");
+
+    dispatch({type: "logout"});
+  }
+
+  useEffect(() => {
     const t = localStorage.getItem("__refresh_token__");
 
     const u = JSON.parse(localStorage.getItem("user"));
 
     if (t && u) {
       auth(u, t);
-    } else {
     }
-
-    return u;
-  }
-
-  useEffect(() => {
-    setValues();
   }, []);
 
   return (
@@ -55,6 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       value={{
         state,
         auth,
+        logout,
       }}
     >
       {children}

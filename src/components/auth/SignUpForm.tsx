@@ -1,7 +1,7 @@
 "use client";
 
 // React/next
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 
@@ -60,7 +60,10 @@ const formSchema = z
 export default function SignUpForm() {
   const {toast} = useToast();
   const {state, auth} = useAuth(); // Access UserContext
+
   const router = useRouter(); // Initialize Next.js router
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,9 +76,14 @@ export default function SignUpForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     try {
       // Make sign up request
-      const result = await signUp(values);
+      const result = await signUp({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      });
 
       // Extract user and token from the backend response
       const {user, payload: token} = result.message;
@@ -83,21 +91,19 @@ export default function SignUpForm() {
       // Update AuthContext
       auth(user, token);
 
-      // Store user and token in local storage
-      localStorage.setItem("__refresh_token__", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
       // Show success message
       toast({title: "Registration Successful"});
 
       // Redirect user to home page
       router.push("/");
-    } catch (error: any) {
+    } catch {
       toast({
         title: "Registration Failed",
-        description: error.message ? error.message : "Something went wrong",
+        description: "Something went wrong",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -182,7 +188,7 @@ export default function SignUpForm() {
             </div>
 
             <Button className="w-full" type="submit" disabled={state.loading}>
-              {state.loading ? <Loading /> : "Sign up"}
+              {isLoading ? <Loading /> : "Sign up"}
             </Button>
           </form>
 

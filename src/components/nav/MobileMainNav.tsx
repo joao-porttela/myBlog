@@ -22,7 +22,7 @@ interface MobileMainProps {
 
 export default function MobileMainNav({className, routes}: MobileMainProps) {
   const {toggle, setToggle} = useToggle();
-  const {user} = useAuth();
+  const {state} = useAuth();
 
   const toggleNav = () => {
     setToggle(!toggle);
@@ -51,7 +51,7 @@ export default function MobileMainNav({className, routes}: MobileMainProps) {
               "absolute transition-all duration-500 top-full flex flex-col w-full h-screen bg-background border-t-border left-0 pt-2 pb-3 px-4 z-50"
             )}
           >
-            <div className="flex flex-col gap-96">
+            <div className="flex flex-col gap-80">
               <ScrollArea className="h-full w-full">
                 {routes &&
                   routes.map((route) => {
@@ -78,7 +78,7 @@ export default function MobileMainNav({className, routes}: MobileMainProps) {
                   })}
               </ScrollArea>
 
-              {user && (
+              {state.user && (
                 <div className="relative">
                   <Separator className="bg-destructive" />
                   <div className="py-5">

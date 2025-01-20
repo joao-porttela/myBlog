@@ -8,8 +8,8 @@ export interface IPost {
   title?: string;
   content?: string | null;
   published?: boolean;
-  category: ICategory | null;
-  subCategory: ISubCategory | null;
+  category?: ICategory | null;
+  subCategory?: ISubCategory | null;
   readonly authorId?: string;
   readonly createdAt?: Date;
   readonly updatedAt?: Date | null;

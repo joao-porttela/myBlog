@@ -23,6 +23,7 @@ import {ScrollArea, ScrollBar} from "../ui/scroll-area";
 import {Switch} from "../ui/switch";
 import {Button} from "../ui/button";
 import {Edit, Trash} from "lucide-react";
+import {Editor} from "primereact/editor";
 
 interface PostCardProps {
   post: IPost;
@@ -35,8 +36,11 @@ export default function PostCard({post, getData}: PostCardProps) {
   return (
     <Card className="mb-4">
       <CardHeader className="">
-        <CardTitle className="mb-2 flex items-center justify-between">
-          <Link className="hover:underline text-primary" href={`/my-posts/${post.id}`}>
+        <CardTitle className="mb-2 flex gap-2 items-center justify-between">
+          <Link
+            className="hover:underline text-primary text-sm md:text-3xl"
+            href={`/my-posts/${post.id}`}
+          >
             {post.title}
           </Link>
 
@@ -68,17 +72,20 @@ export default function PostCard({post, getData}: PostCardProps) {
       </CardHeader>
       <CardContent>
         {post.content ? (
-          <div
-            dangerouslySetInnerHTML={{__html: post.content.substring(0, 100) + "..."}}
-          ></div>
+          <Editor
+            style={{border: "0", padding: 0, margin: 0, fontSize: "16px"}}
+            showHeader={false}
+            readOnly
+            value={post.content.substring(0, 100) + "..."}
+          />
         ) : (
-          <p>No content available.</p>
+          <p className="p-4">No content available.</p>
         )}
         {post.tags && post.tags.length > 0 && (
           <ScrollArea className="whitespace-nowrap mt-4">
-            <div className="flex gap-2 h-fit">
+            <div className="flex gap-2 h-12">
               {post.tags.map((tag) => (
-                <Badge className="text-sm" key={tag.id} variant="secondary">
+                <Badge className="text-sm h-fit" key={tag.id} variant="secondary">
                   <LinkTag tag={tag} />
                 </Badge>
               ))}

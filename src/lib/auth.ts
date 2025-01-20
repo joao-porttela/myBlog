@@ -69,7 +69,7 @@ export async function verifyToken(token: string): Promise<boolean> {
     }
 
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

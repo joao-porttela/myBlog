@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 
@@ -28,6 +28,8 @@ export default function LoginForm() {
   const {state, auth} = useAuth(); // Access UserContext
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,6 +41,8 @@ export default function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const {email, password} = values;
 
+    setIsLoading(true);
+
     try {
       // Make login request
       const result = await login({email, password});
@@ -49,21 +53,19 @@ export default function LoginForm() {
       // Update AuthContext
       auth(user, token);
 
-      // Store user and token in local storage
-      localStorage.setItem("__refresh_token__", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
       // Process response here
       toast({title: "Login Successful"});
 
       // Redirect user to home page
       router.push("/");
-    } catch (error: any) {
+    } catch {
       toast({
         title: "Login Failed",
-        description: error.message ? error.message : "Something went wrong",
+        description: "Something went wrong",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -114,7 +116,7 @@ export default function LoginForm() {
             </div>
 
             <Button className="w-full" type="submit" disabled={state.loading}>
-              {state.loading ? <Loading /> : "Login"}
+              {isLoading ? <Loading /> : "Login"}
             </Button>
           </form>
 

@@ -23,30 +23,30 @@ export default function SubCategoryPage() {
 
   const [subCategory, setSubCategory] = useState<ISubCategory>({});
 
-  const getData = async () => {
-    try {
-      const subCategoryId = params.id;
-
-      if (!subCategoryId) {
-        router.push("/my-posts");
-        return;
-      }
-
-      // Fetch subcategory data
-      const subCategory = await getSubCategory(subCategoryId);
-      setSubCategory(subCategory);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Something went wrong while loading subcategory data",
-        variant: "destructive",
-      });
-    }
-  };
-
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const subCategoryId = params.id;
+
+        if (!subCategoryId) {
+          router.push("/my-posts");
+          return;
+        }
+
+        // Fetch subcategory data
+        const subCategory = await getSubCategory(subCategoryId);
+        setSubCategory(subCategory);
+      } catch {
+        toast({
+          title: "Error",
+          description: "Something went wrong while loading subcategory data",
+          variant: "destructive",
+        });
+      }
+    };
+
     getData();
-  }, []);
+  }, [params.id, router]);
 
   return (
     <div className="py-4 mx-4 md:mx-40">
@@ -62,7 +62,7 @@ export default function SubCategoryPage() {
       </section>
 
       <section>
-        <MyPosts posts={subCategory.posts} getData={getData} />
+        <MyPosts categoryId={subCategory.categoryId} subCategoryId={params.id} />
       </section>
     </div>
   );

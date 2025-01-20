@@ -11,7 +11,15 @@ export function AuthReducer(
     case "auth":
       if (!action?.payload?.user || !action?.payload?.token) return {...state};
 
-      return {...state, user: action.payload.user, token: action.payload.token};
+      return {
+        ...state,
+        user: action.payload.user,
+        token: action.payload.token,
+      };
+
+    case "logout":
+      state.token = null;
+      state.user = null;
 
     case "loading":
       return {...state, loading: !state.loading};

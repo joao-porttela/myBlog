@@ -57,7 +57,7 @@ export default function DeletePost({post, getData}: {post: IPost; getData?: () =
       <div className="flex gap-4 justify-end">
         <Button onClick={handleCancel}>Cancel</Button>
         <Button
-          className="text-white w-32"
+          className="text-black w-32"
           variant="destructive"
           onClick={handleDelete}
           disabled={isLoading}

@@ -15,7 +15,7 @@ import {ScrollArea} from "../ui/scroll-area";
 
 type CustomModalProps = {
   title: string;
-  subHeading: string;
+  subHeading?: string;
   children: React.ReactNode;
   defaultOpen: boolean;
 };

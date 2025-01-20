@@ -8,10 +8,9 @@ import {ITag} from "@/interfaces/tag.interface";
 interface TagProps {
   tag: ITag;
   current?: boolean;
-  count?: number;
 }
 
-export default function LinkTag({tag, current, count}: TagProps) {
+export default function LinkTag({tag, current}: TagProps) {
   return (
     <Link
       className={badgeVariants({

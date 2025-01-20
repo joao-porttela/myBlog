@@ -15,8 +15,6 @@ export function ModalReducer(
 
         if (action?.payload?.data) data = {...state.data, ...action?.payload?.data};
 
-        console.log(data);
-
         return {...state, data, modal, isOpen: true};
       }
 

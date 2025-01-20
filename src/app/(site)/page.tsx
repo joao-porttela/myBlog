@@ -12,8 +12,8 @@ export default function Home() {
 
         <p className="text-center z-10">Blog your knowledge</p>
 
-        <div className="bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
-          <h1 className="text-5xl md:text-[100px] font-bold text-center">myBlog</h1>
+        <div className="min-h-14 md:min-h-28 bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
+          <h1 className="text-5xl md:text-[100px] font-bold text-center">My Blog</h1>
         </div>
       </div>
 

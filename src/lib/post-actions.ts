@@ -31,7 +31,15 @@ export async function createPost(body: {
   return result;
 }
 
-export async function getUserPosts(authorId: string) {
+export async function getUserPosts({
+  authorId,
+  categoryId,
+  subCategoryId,
+}: {
+  authorId: string;
+  categoryId?: string;
+  subCategoryId?: string;
+}) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/post/get-user-posts`,
     {
@@ -40,7 +48,9 @@ export async function getUserPosts(authorId: string) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        authorId,
+        authorId: authorId,
+        categoryId: categoryId,
+        subCategoryId: subCategoryId,
       }),
     }
   );
@@ -68,8 +78,6 @@ export async function getPost(id: string) {
   if (!response.ok) throw new Error();
 
   const result = await response.json();
-
-  console.log(result);
 
   if (result.error) throw new Error(result.message);
 

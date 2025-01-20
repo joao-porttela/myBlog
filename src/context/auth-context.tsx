@@ -12,4 +12,5 @@ export const authInitialState: IAuthState = {
 export const AuthContext = createContext<IAuthContext>({
   state: authInitialState,
   auth: () => {},
+  logout: () => {},
 });

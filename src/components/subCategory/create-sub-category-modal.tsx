@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+
 import {useRouter} from "next/navigation";
 
 import CustomModal from "../global/custom-modal";
@@ -8,10 +9,15 @@ import {Button} from "../ui/button";
 
 import {useModal} from "@/hooks/use-modal";
 import {toast} from "@/hooks/use-toast";
+import {createSubCategory} from "@/lib/sub-category-actions";
 
-import {createCategory} from "@/lib/category-actions";
+type CreateSubCategoryModalProps = {
+  categoryId: string;
+};
 
-export default function CreateCategoryModal() {
+export default function CreateSubCategoryModal({
+  categoryId,
+}: CreateSubCategoryModalProps) {
   const router = useRouter();
   const [name, setName] = useState("");
 
@@ -27,16 +33,18 @@ export default function CreateCategoryModal() {
 
       if (!user) throw new Error();
 
-      const category = await createCategory(name, user.id);
+      if (!categoryId) throw new Error();
+
+      const subCategory = await createSubCategory(name, user.id, categoryId);
 
       toast({
         title: "Success",
-        description: "New category created",
+        description: "New Sub category created",
       });
 
       dispatch({type: "close"});
 
-      router.push(`/my-posts/category/${category.id}`);
+      router.push(`/my-posts/sub-category/${subCategory.id}`);
     } catch {
       toast({
         title: "Fail",

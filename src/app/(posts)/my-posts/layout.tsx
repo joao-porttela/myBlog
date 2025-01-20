@@ -18,13 +18,14 @@ export default function Layout({children}: Props) {
 
     const vToken = async () => {
       if (!token) {
+        console.log("NO token");
         router.push("/auth/login");
         return;
       }
 
       const isValid = verifyToken(token);
 
-      if (!isValid) router.push("/auth/login");
+      if (!isValid) return router.push("/auth/login");
     };
 
     vToken();

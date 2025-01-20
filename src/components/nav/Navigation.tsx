@@ -21,7 +21,7 @@ import {IRoute} from "./interfaces/IRoute";
 import LogoutButton from "../ui/logout-button";
 
 export default function Navigation() {
-  const {user} = useAuth();
+  const {state} = useAuth();
   const pathname = usePathname();
   const isMobile = useIsMobile();
 
@@ -46,8 +46,8 @@ export default function Navigation() {
     },
 
     {
-      href: user ? "/account" : `/auth/login`,
-      label: user ? "Account" : "Login",
+      href: state.user ? "/account" : `/auth/login`,
+      label: state.user ? "Account" : "Login",
       icon: <CircleUser />,
       active:
         pathname === `/account` ||
@@ -58,11 +58,11 @@ export default function Navigation() {
   ];
 
   return (
-    <div className="sticky w-full py-4 top-0 left-0 flex items-center justify-between px-4 z-20 bg-secondary md:px-40">
+    <div className="sticky w-full h-full py-4 top-0 left-0 flex items-center justify-between px-4 z-20 bg-secondary md:px-40">
       <aside>
         <Link href="/" className="flex items-center gap-2">
           <Rss />
-          <span className="text-xl font-bold">myBlog</span>
+          <span className="text-xl font-bold">My Blog</span>
         </Link>
       </aside>
 
@@ -73,7 +73,7 @@ export default function Navigation() {
           <Nav className="hidden md:flex" routes={routes} />
         )}
 
-        {user && !isMobile && (
+        {state.user && !isMobile && (
           <LogoutButton
             cl="text-black bg-destructive hover:bg-destructive-foreground hover:cursor-pointer rounded-md p-2"
             size={20}

@@ -5,13 +5,7 @@ import Link from "next/link";
 import {useParams, useRouter} from "next/navigation";
 
 import {Badge} from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import {CardContent, CardHeader, CardTitle, CardDescription} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
 import {getPost} from "@/lib/post-actions";
@@ -25,6 +19,8 @@ import {useAuth} from "@/hooks/use-auth";
 import {useModal} from "@/hooks/use-modal";
 
 import {IPost} from "@/interfaces/post.interface";
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
+import {Editor} from "primereact/editor";
 
 export default function POst() {
   const router = useRouter();
@@ -32,7 +28,7 @@ export default function POst() {
   const [post, setPost] = useState<IPost | null>(null);
 
   const {setOpen} = useModal();
-  const {user} = useAuth();
+  const {state} = useAuth();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -66,7 +62,7 @@ export default function POst() {
     );
   }
 
-  const isAuthor = post.authorId === user?.id;
+  const isAuthor = post.authorId === state.user?.id;
 
   return (
     <div className="py-4 mx-4 md:mx-40">
@@ -74,52 +70,57 @@ export default function POst() {
         <ChevronLeftIcon />
       </Button>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-3xl font-bold">{post.title}</CardTitle>
+      <CardHeader className="p-0">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-3xl font-bold">{post.title}</CardTitle>
 
-            {isAuthor && (
-              <div className="flex gap-4 mt-4">
-                <Button variant="outline" size="sm">
-                  <Link href={`/posts/edit/${post.id}`}>
-                    <Edit />
-                  </Link>
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => setOpen(<DeletePost post={post} />)}
-                >
-                  <Trash className="text-black" />
-                </Button>
-              </div>
-            )}
-          </div>
-          <CardDescription>
-            Published: {post.published ? "Yes" : "No"} | Created:{" "}
-            {new Date(post.createdAt).toLocaleDateString()}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            {(post.content && (
-              <div dangerouslySetInnerHTML={{__html: post.content}}></div>
-            )) ||
-              "No content available."}
-          </div>
+          {isAuthor && (
+            <div className="flex gap-4 mt-4">
+              <Button variant="outline" size="sm">
+                <Link href={`/my-posts/edit/${post.id}`}>
+                  <Edit />
+                </Link>
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setOpen(<DeletePost post={post} />)}
+              >
+                <Trash className="text-black" />
+              </Button>
+            </div>
+          )}
+        </div>
+        <CardDescription>
+          Published: {post.published ? "Yes" : "No"} | Created:{" "}
+          {new Date(post.createdAt).toLocaleDateString()}
+        </CardDescription>
+      </CardHeader>
 
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex gap-2 mt-2">
+      <CardContent className="p-0">
+        {(post.content && (
+          <Editor
+            style={{border: "0", fontSize: "16px"}}
+            showHeader={false}
+            readOnly
+            value={post.content}
+          />
+        )) ||
+          "No content available."}
+
+        {post.tags && post.tags.length > 0 && (
+          <ScrollArea className="whitespace-nowrap mt-4 px-4">
+            <div className="flex gap-2 h-12">
               {post.tags.map((tag) => (
-                <Badge key={tag.id} variant="secondary">
+                <Badge className="text-sm h-fit" key={tag.id} variant="secondary">
                   <LinkTag tag={tag} />
                 </Badge>
               ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        )}
+      </CardContent>
     </div>
   );
 }

@@ -19,7 +19,6 @@ import {
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {CardHeader, CardTitle} from "@/components/ui/card";
-import {Textarea} from "@/components/ui/textarea";
 import {Badge} from "@/components/ui/badge";
 import {Switch} from "@/components/ui/switch";
 import Loading from "@/components/ui/loading";
@@ -38,14 +37,14 @@ import {getAuthorSubCathegories, getSubCategory} from "@/lib/sub-category-action
 // Interfaces
 import {ICategory} from "@/interfaces/category.interface";
 import {ISubCategory} from "@/interfaces/subCategory.interface";
+import {Editor} from "primereact/editor";
 
 // Validation Schema
 const formSchema = z.object({
   title: z
     .string()
     .min(1, "Title must have at least one character")
-    .max(30, "Title can only have a max of 30 characters"),
-  content: z.string().optional(),
+    .max(50, "Title can only have a max of 50 characters"),
   published: z.boolean(),
 });
 
@@ -57,11 +56,13 @@ export default function CreatePost() {
 
   const router = useRouter();
 
-  const [categories, setCategories] = useState<[ICategory] | []>([]);
+  const [categories, setCategories] = useState<ICategory[] | []>([]);
   const [category, setCategory] = useState<ICategory>({id: "", name: ""});
 
-  const [subCategories, setSubCategories] = useState<[ISubCategory] | []>([]);
+  const [subCategories, setSubCategories] = useState<ISubCategory[] | []>([]);
   const [subCategory, setSubCategory] = useState<ISubCategory>({id: "", name: ""});
+
+  const [content, setContent] = useState<string>("");
 
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
@@ -133,13 +134,12 @@ export default function CreatePost() {
 
     setParams();
     setIsLoading(false);
-  }, []);
+  }, [paramsCatId, paramsSubCatId]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      content: "",
       published: false,
     },
   });
@@ -161,6 +161,7 @@ export default function CreatePost() {
         authorId: user.id,
         category: category,
         subCategory: subCategory,
+        content: content,
         ...values,
         tags,
       };
@@ -169,11 +170,7 @@ export default function CreatePost() {
 
       toast({title: "Post Created!", description: "Your post was successfully created."});
 
-      const url = `/my-posts${paramsSubCatId ? `/sub-category/${subCategory.id}` : ""}${
-        !paramsSubCatId && paramsCatId ? `/category/${category.id}` : ""
-      }`;
-
-      router.push(url);
+      router.back();
     } catch {
       toast({
         title: "Error",
@@ -195,8 +192,8 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="md:mx-40 px-4 mb-10 space-y-6">
-      <Button size="sm" onClick={() => router.back()}>
+    <div className="py-4 mx-4 md:mx-40">
+      <Button className="mb-4" size="sm" onClick={() => router.back()}>
         <ChevronLeftIcon />
       </Button>
 
@@ -347,25 +344,20 @@ export default function CreatePost() {
           />
 
           {/* Content */}
-          <FormField
-            control={control}
-            name="content"
-            render={({field}) => (
-              <FormItem>
-                <FormLabel>
-                  <h2 className="md:text-lg">Content</h2>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="h-96"
-                    placeholder="Write your post content here..."
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <FormItem>
+            <FormLabel>
+              <h2 className="md:text-lg">Content</h2>
+            </FormLabel>
+            <FormControl>
+              <Editor
+                value={content}
+                onTextChange={(e) => setContent(e.htmlValue)}
+                style={{height: "320px"}}
+                className="bg-primary-foreground border-primary"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
 
           {/* Tags */}
           <div>
