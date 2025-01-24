@@ -20,8 +20,8 @@ export default function UpdateSubCategory({
   subCategory,
   getData,
 }: UpdateSubCategoryProps) {
-  const {state, dispatch} = useModal();
-  const [name, setName] = useState<string>(state.data.name);
+  const {dispatch} = useModal();
+  const [name, setName] = useState<string>(subCategory.name);
 
   const router = useRouter();
 
